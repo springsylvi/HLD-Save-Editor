@@ -1,0 +1,175 @@
+There are 3 types of data representations for values in the save file:
+    * A single decimal number, with exactly 6 digits after the decimal point, e.g. 47.000000
+    * A string of concatenated flags, each followed by a + character, e.g. "1+2+21+"
+    * A string mapping a set of keys to lists of values. Value lists are a string of numbers, each followed by a & character. Keys are separated by a > character. e.g. "2=7&400&>0=121&"
+
+For each field in the save file, the field name, data type (num, list or map) and meaning (if known) are noted below. gameName is the only field which is not one of these 3 types, since it is directly taken from user input.
+
+drifterkey (num): Keys owned. Valid values are 0-16.
+
+tablet (list): Monoliths activated. Valid values are 0-15.
+
+well (list): Pillars activated. See area IDs.
+
+wellMap (list): Pillars shown on map. Should be the same (apart from order) as well during regular gameplay.
+
+warp (list): Large warps activated. See area IDs.
+
+cShells, cSwords, cCapes (list): Outfits owned. See outfit IDs. All 3 lists should be equal through regular gameplay.
+
+compShell, sword, cape (num): Currently equipped outfit.
+
+sc (list): Guns owned. See gun IDs.
+
+scUp (list): Guns upgraded.
+
+scK (map): Maps gun IDs to ?
+
+skill (list): Skills bought. See skill IDs.
+
+specialUp (num): Grenade slots bought. Valid values are 0-2, but values over 2 work as expected.
+
+healthUp (num): Medkit slots bought. Valid values are 0-2.
+
+values (map): Contains several miscellaneous values.
+    ValuebadassOfficeState (num): ? usually 0/2/3 ?
+    ValueaptLight (num): ?
+    ValuedashHS (num): Chaindash Challenge Highscore
+    ValueSoccerWins, ValueSoccerLosses (num): Wins and Losses against soccer kid.
+
+halluc (num): Number of judgement cutscenes watched?
+
+eq00, eq01 (num): IDs of currently equipped guns.
+
+checkRoom (num): The room the drifter is currently in. Each map has a corresponding integer in a table. (Add this table later)
+
+checkX, checkY (num): The x and y coordinates of the drifter in the current room. Top left corner is (0,0).
+
+checkHP (num): The drifter's current Health and Ammo values.
+
+checkBat: The drifter's current battery (Ammo%) out of 100.
+
+checkAmmo (num): The drifter's current grenade ammo.
+
+checkStash (num): Number of healthkits the drifter is carrying.
+
+checkCID: Unknown meaning, appears to depend on checkRoom.
+
+bosses (map): For each boss killed, lists the coordinates of their corpse.
+
+bossGearbits (list): Gearbits collected from dead bosses. See Boss Bit IDs (add this later).
+
+rooms (list): IDs of rooms visited.
+
+enemies (map): IDs of dead enemies.
+
+events (map): IDs of events triggered.
+
+cues (list):
+
+healthKits (list): IDs of healthkits collected.
+
+cl (map): Various collectables. The key represents a type of collectable (see collectable IDs) and the values are specific instance IDs. (add instance table later)
+
+destruct (map): Destructables that have been destroyed, e.g. flowers.
+
+playT (num): Total playtime on the file in minutes.
+
+dateTime (num): The date and time at which the game was saved. Format is (day) + ??? + (0.000001 * seconds).
+
+gameName: The file name.
+
+noviceMode (num): Whether Newcomer Mode was selected on file creation. Valid values are 0-1. Has no effect on alt drifter.
+
+charDeaths (num): How many times the drifter has died on this file.
+
+hasMap (num): Whether the map has been picked up. Valid values are 0-1.
+
+gear (num): Unspent Gearbits. Valid values are 0-185.
+
+
+gunReminderTimes: ?
+successfulHealTimes: ?
+gearReminderTimes: ?
+successfulWarpTimes: ?
+noSpawn: ?
+badass (num): ?
+mapMod = ?
+fireplaceSave = ?
+tutHeal: ?
+successfulCollectTimes: ?
+newcomerHoardeMessageShown: ?
+permaS: ?
+CH: ?
+
+Index Values:
+    Areas:
+        0: East
+        1: North
+        2: West
+        3: South
+        4: Central
+        5: Abyss?
+
+    Guns:
+        1: Pistol
+        2: Zaliska
+        21: Laser Gun
+        23: Railgun
+        41: Shotgun
+        43: Diamond Shotgun
+
+    Outfits:
+        0: NG
+        1: Blue
+        2: Fuschia 
+        3: White
+        4: Yellow
+        5: Orange
+        6: Blue/Green
+        7: Pink
+        8: Black
+        9: Ochre
+        10: Purple
+        11: NG+
+
+    Skills:
+        1: Charge Slash
+        2: Projectile Reflect
+        3: Phantom Slash
+        4: Chaindash
+        5: Projectile Shield
+        6: Dash Stab
+
+    Collectable Types:
+        0: Gearbits
+        2: Keys
+        6: North Modules
+        7: East Modules
+        8: South Modules
+        9: West Modules
+        10: ?
+        11: ?
+        12: ?
+        13: ?
+        
+    Bosses:
+        0: Cleaner
+        1: JerkPope
+        2: OldGeneral
+        3.10: MarkScythe
+        3.20: BennyArrow
+        3.30: BulletBaker
+        3.40: CountAlucard
+
+
+NOTES:
+
+
+on NG: tutheal=3,checkBat=100,halluc=0
+room with judgement cutscene: eq00=1,sc="1+",scK="1=1",checkBat=83.343333
+after cutscene: permaS="-1394233=2>",halluc=1,badassofficestate=0,tutheal=2
+
+16:00:30 = 43748.250330
+16:01:20 = 43749.250920
+

@@ -1,0 +1,16 @@
+ROOMS
+intro=1,central=?
+46 rm_in_01_brokenshallows
+47 rm_in_02_tutorial
+48 rm_in_03_tut_combat
+?? rm_in_horizoncliff
+49 rm_in_halucinationdeath
+50 rm_in_drifterfire
+53 rm_in_backertablet
+# 54-59 unused?
+60 rm_c_drifterworkshop
+61 rm_c_central
+62 rm_c_dregs_n
+63 rm_c_dregs_s
+64 rm_c_dregs_e
+65 rm_c_dregs_w
