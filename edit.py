@@ -1,12 +1,4 @@
-import sys, base64, os.path, json
-
-# names of numeric fields
-num_fields = ["drifterkey","compShell","sword","cape","specialUp","healthUp",
-    "halluc","eq00","eq01","checkRoom","checkX","checkY","checkHP","checkBat",
-    "checkAmmo","checkStash","checkCID","playT","dateTime","noviceMode",
-    "charDeaths","hasMap","gear","gunReminderTimes","gearReminderTimes",
-    "successfulHealTimes","successfulWarpTimes","successfulCollectTimes",
-    "CH","badass","tutHeal","fireplaceSave","newcomerHoardeMessageShown"]
+import sys, base64, os.path, json, configparser
 
 class SaveMetadata:
     def __init__(self, header, path, savefile):
@@ -95,10 +87,10 @@ def savedata_write(savedata_map, metadata, save_num, args):
         if (confirm != "y"):
             return
 
-    savedata_text = "" # implement conversion from savedata_map
-
-    print("about to save file")
-    return
+    savedata_map_raw = {}
+    for name, field in savedata_map.items():
+        savedata_map_raw[name] = field.value
+    savedata_text = json.dumps(savedata_map_raw) + " "
 
     savedata_full = metadata.header + savedata_text.encode()
     if (save_num == args[1]):
@@ -114,17 +106,37 @@ def savedata_write(savedata_map, metadata, save_num, args):
     return
 
 if len(sys.argv) == 1:
-    print("Not implemented argc=1 yet")
-    save_num = None # read this value from config.ini
-    sys.exit()
+    save_num = None
 elif len(sys.argv) == 2:
     save_num = sys.argv[1]
+    if (save_num not in ["0","1","2","3"]):
+        confirm = input("save_num does not correspond to a valid savefile. \
+        Read anyway? (y/n) ")
+        if (confirm != "y"):
+            sys.exit()
 else:
     print("Usage: python3 edit.py [save_num]")
     sys.exit()
 
 # read config.ini
-savefile_path = "/Users/NOT_CONNOR/Library/Application Support/com.HeartMachine.HyperLightDrifter"
+config = configparser.configParser()
+try:
+    config_ini = open("config.ini", "r")
+except:
+    print("No config file found")
+    sys.exit()
+
+config.read_file(config_ini)
+savefile_path = config.get("path", None)
+if (save_num is None):
+    save_num = config.get("save_num", None)
+
+if (savefile_path is None):
+    print("No savefile path specified")
+    sys.exit()    
+if (save_num is None):
+    print("No save number specified")
+    sys.exit()
 
 metadata = SaveMetadata(None, savefile_path, None)
 
