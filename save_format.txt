@@ -11,7 +11,7 @@ tablet (list): Monoliths activated. Valid values are 0-15.
 
 well (list): Pillars activated. See area IDs.
 
-wellMap (list): Pillars shown on map. Should be the same (apart from order) as well during regular gameplay.
+wellMap (list): Boss icons shown on map. Colour (Red/Black) depends on whether the respective pillar has been activated.
 
 warp (list): Large warps activated. See area IDs.
 
@@ -63,13 +63,15 @@ rooms (list): IDs of rooms visited.
 
 enemies (map): IDs of dead enemies.
 
-events (map): IDs of events triggered.
+events (list): IDs of events triggered.
 
-cues (list):
+cues (list): IDs of camera lock cutscenes triggered.
 
 healthKits (list): IDs of healthkits collected.
 
 cl (map): Various collectables. The key represents a type of collectable (see collectable IDs) and the values are specific instance IDs. (add instance table later)
+
+mapMod (map): Maps rooms IDs of modules shown on the map to lists of numbers representing their mode. Valid values are 1-2 for hinted/collected.  The length of this list is the number of modules from that room. This only affects the module icons shown on the map, not the actual number of modules..
 
 destruct (map): Destructables that have been destroyed, e.g. flowers.
 
@@ -79,7 +81,9 @@ dateTime (num): The date and time at which the game was saved. Format is (day) +
 
 gameName: The file name.
 
-noviceMode (num): Whether Newcomer Mode was selected on file creation. Valid values are 0-1. Has no effect on alt drifter.
+CH (num): Whether the the file uses the Alt Drifter. Valid values are 0-1.
+
+noviceMode (num): Whether the file uses Newcomer Mode. Valid values are 0-1. Has no effect on Alt Drifter.
 
 charDeaths (num): How many times the drifter has died on this file.
 
@@ -88,19 +92,17 @@ hasMap (num): Whether the map has been picked up. Valid values are 0-1.
 gear (num): Unspent Gearbits. Valid values are 0-185.
 
 
-gunReminderTimes: ?
-successfulHealTimes: ?
-gearReminderTimes: ?
-successfulWarpTimes: ?
+gunReminderTimes (num): ?
+successfulHealTimes (num): ?
+gearReminderTimes (num): ?
+successfulWarpTimes (num): ?
 noSpawn: ?
 badass (num): ?
-mapMod = ?
-fireplaceSave = ?
-tutHeal: ?
-successfulCollectTimes: ?
-newcomerHoardeMessageShown: ?
-permaS: ?
-CH: ?
+fireplaceSave (num): ?
+tutHeal (num): ?
+successfulCollectTimes (num): ?
+newcomerHoardeMessageShown (num): ?
+permaS (list): ?
 
 Index Values:
     Areas:
@@ -161,6 +163,9 @@ Index Values:
         3.20: BennyArrow
         3.30: BulletBaker
         3.40: CountAlucard
+
+    Rooms:
+        see id_mappings.txt
 
 
 NOTES:

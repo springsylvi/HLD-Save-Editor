@@ -1,16 +1,240 @@
 ROOMS
-intro=1,central=?
+intro=46,central=60,north=84,south=128,west=209,abyss=256
+1 None | splash screen
+2 None | save screen
+3 None | controller screen
+4 None | heart machine screen
+5 None | main menu
+8 None credits
 46 rm_in_01_brokenshallows
 47 rm_in_02_tutorial
 48 rm_in_03_tut_combat
-?? rm_in_horizoncliff
-49 rm_in_halucinationdeath
-50 rm_in_drifterfire
+49 rm_in_horizoncliff
+50 rm_in_halucinationdeath
+51 rm_in_drifterfire
+52 rm_in_blackwaitroom
 53 rm_in_backertablet
-# 54-59 unused?
+54 None
+55 rm_inl_secrets (unused)
+56 rm_lin_gaps (unused)
+57 rm_lin_combat (unused)
+58 None
+59 None
 60 rm_c_drifterworkshop
 61 rm_c_central
 62 rm_c_dregs_n
 63 rm_c_dregs_s
 64 rm_c_dregs_e
 65 rm_c_dregs_w
+66 rm_c_ven_apoth
+67 rm_c_ven_dash
+68 rm_c_ven_gun
+69 rm_c_ven_spec
+70 rm_c_ven_sdojo
+71 rm_carena
+72 rm_pax_staging
+73 rm_pax_arena1
+74 rm_pax_arena2
+75 rm_pax_arenae
+76 rm_pax_arenaw
+77 None rm_pax_arenaall
+78 rm_c_backertabletx
+79 rm_televatorshaft
+80 None
+81 None
+82 None
+83 None
+84 rm_nl_entrancepath
+85 rm_nx_titanvista
+86 rm_nx_northhall
+87 rm_nl_cavevault
+88 rm_nx_aftertitan
+89 rm_nc_npchatchery
+90 rm_nx_shrinepath
+91 rm_nl_shrinepath2vault
+92 rm_nx_cave01
+93 rm_nx_shrinepath_2
+94 rm_nx_mooncourtyard
+95 rm_nx_towerlock
+96 rm_nc_cliffcampfire
+97 rm_nl_tobrokenshallows
+98 rm_nx_stairs03
+99 None
+100 rm_nl_warproom
+101 rm_nl_crushwarphall
+102 rm_nl_crushtransition
+103 rm_nl_crushbackloop
+104 rm_nc_crusharena
+105 None
+106 rm_nl_dropspiralopen
+107 rm_nl_droppits
+108 rm_nl_dropblockcultfight
+109 rm_nl_droparena
+110 None
+111 rm_nl_gapopening
+112 rm_nx_gapwide
+113 rm_nl_gaphallway
+114 rm_nl_risingarena
+115 None
+116 rm_nx_cathedralentrance
+117 rm_nx_cathedralhall
+118 rm_nl_altarthrone
+119 rm_nx_spiralstaircase
+120 rm_nx_librariantablet
+121 rm_nx_jerkpope
+122 None
+123 rm_nl_stairascent
+124 rm_nl_crusharena
+125 None
+126 None
+127 None
+128 rm_sx_southopening
+129 rm_ch_ctemplate
+130 rm_sx_towersouth
+131 rm_sx_npc
+132 rm_s_gauntlet_elevator
+133 rm_ch_bgunpillars
+134 rm_ch_bfinal
+135 rm_s_gauntletend
+136 None
+137 rm_ch_bdirkdemolition
+138 None
+139 rm_ch_tabigone
+140 rm_ch_cgateblock
+141 rm_ch_bmaddash
+142 rm_ch_tlongestroad
+143 rm_s_bulletbaker
+144 rm_ch_cendhall
+145 None
+146 rm_ch_cturnhall
+147 rm_ch_bfps
+148 rm_ch_cbigggns
+149 rm_ch_cspawnground
+150 rm_s_countaculard
+151 None
+152 rm_ch_acorner
+153 None
+154 rm_ch_bdirkdeluge
+155 rm_ch_bpods
+156 rm_ch_bgundirkdash
+157 rm_s_markscythe
+158 rm_s_gauntletlinkup
+159 None
+160 rm_ch_apillarbird
+161 rm_ch_cspiral
+162 rm_ch_tbirdstandoff
+163 rm_ch_bleaperfall
+164 rm_s_bennyarrow
+165 rm_s_gauntlettitanfinale
+166 None
+167 ?? (unused)
+168 None
+169 None
+170 None
+171 rm_ea_eastopening
+172 rm_ec_swordbridge
+173 rm_el_flameelevatorenter
+174 rm_ea_watertunnellab
+175 rm_ec_theplaza
+176 rm_ec_npcdrugden
+177 rm_ex_towereast
+178 rm_eb_bogstreet
+179 rm_ec_plazatoloop
+180 None
+181 rm_el_megahugelab
+182 rm_eb_meltymasharena
+183 rm_eb_flamepitlab
+184 rm_el_flameelevatorexit
+185 rm_eb_deadotterwalk
+186 None
+187 rm_ec_plazaaccesslab
+188 rm_ec_dockslab
+189 rm_ex_dockscampfire
+190 rm_ev_docksbridge
+191 rm_el_frogarena
+192 None
+193 rm_ec_bigboglab
+194 rm_ea_bogtemplecamp
+195 rm_ea_frogboss
+196 rm_ec_templeishvault
+197 None
+198 rm_ec_eastloop
+199 rm_ec_looplab
+200 rm_eb_meltyleaperarena
+201 None
+202 rm_ec_plazatodocks (unused)
+203 rm_ea_dockfightlab (unused)
+204 rm_eb_underotterbigriflerumble (unused)
+205 rm_eb_cleanershole (unused)
+206 None
+207 None
+208 None
+209 rm_wa_entrance
+210 rm_wl_prisonhalvault
+211 rm_wa_deadwood
+212 rm_wa_deadwoods1
+213 rm_wa_grotto_buffintro
+214 rm_wc_windingwood
+215 rm_wc_grottonpc
+216 rm_wl_npctreehouse
+217 rm_wc_minilab
+218 rm_wt_thewood
+219 rm_wa_entswitch
+220 rm_wc_meadowoodcorner
+221 None
+222 rm_wb_treetreachery
+223 rm_wl_westdriftervault
+224 None
+225 rm_wt_slowlab
+226 rm_wc_cliffsidecellsredux
+227 rm_wc_prisonhal
+228 None
+229 rm_wc_thinforest
+230 rm_wc_simplepath
+231 rm_wc_crystallake
+232 rm_wc_crystallakevault
+233 rm_wc_prisonhallend
+234 rm_wc_thinforestlow
+235 rm_wc_thinforestlowsecret
+236 rm_wa_titanfalls
+237 None
+238 rm_wa_vale
+239 rm_wc_bigmeadow
+240 rm_wc_bigmeadowvault
+241 rm_wc_meadowcavecrossing
+242 rm_wb_bigbattle
+243 rm_wb_tanukitrouble
+244 rm_wc_ruinclearing
+245 rm_wx_boss
+246 rm_wa_towerenter
+247 rm_wa_multientrancelab
+248 rm_wa_crsytaldescent
+249 None
+250 rm_wa_grottox (unused)
+251 rm_wb_crystalqueen (unused)
+252 rm_wt_protogrid (unused)
+253 rm_wv_puzzlepalacenew
+254 None
+255 None
+256 rm_a_elevatorshaftupper ??
+257 rm_a_elevatorshaft
+258 rm_a_predownward
+259 rm_a_downward
+260 rm_a_downwarddead
+261 rm_a_downwarddeadrevisit
+262 rm_a_emberroom
+263 None
+264 None
+265 rm_bossrush_hub
+266 rm_bossrush_frogboss
+267 rm_bossrush_jerkpope
+268 rm_bossrush_general
+269 rm_bossrush_bulletbaker
+270 rm_bossrush_countaculard
+271 rm_bossrush_markscythe
+272 rm_bossrush_bennyarrow
+273 rm_bossrush_ember
+274 None bossrush complete
+275 None
+276+ rm_c_drifterworkshop
+
