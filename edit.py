@@ -3,6 +3,13 @@ import sys, base64, os.path, json, configparser
 # where does the game store the file to load on 'continue'?
 # this may affect reverting to backups
 
+class InvalidArgsError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+    def print(self):
+        print(self.message)
+
 class SaveMetadata:
     def __init__(self, header, path):
         self.header = header
@@ -41,8 +48,7 @@ def parse_savedata(savedata_text):
 # prints the value of a field
 def savedata_print(savedata_map, args):
     if (len(args) != 2):
-        print("Usage: print [field_name]\n       print all")
-        return
+        raise InvalidArgsError("Usage: print [field_name]\n       print all") # test indentation
     if (args[1] == "all"):
         for name,field in savedata_map.items():
             print(name, ": ", field, sep="")
@@ -58,8 +64,7 @@ def savedata_print(savedata_map, args):
 # appends a string to the value of a field
 def savedata_append(savedata_map, args):
     if (len(args) != 3):
-        print("Usage: append [field_name] [string]")
-        return
+        raise InvalidArgsError("Usage: append [field_name] [string]")
     field = savedata_map.get(args[1])
     if (field != None):
         field.append(args[2])
@@ -77,14 +82,25 @@ def savedata_set(savedata_map, args):
         except:
             print("Could not convert '{}' to a number".format(args[3]))
     else:
-        print("Usage: set [field_name] [value]\n       set num [field_name] [value]")
+        raise InvalidArgsError("Usage: set [field_name] [value]\n       set num [field_name] [value]") # test indentation
     return
 
-# saves the edited data to a savefile
-def savedata_write(savedata_map, metadata, save_num, args):
+# reads data from a savefile
+def savedata_load(metadata, args):
     if (len(args) != 2):
-        print("Usage: save [save_num]")
-        return
+        raise InvalidArgsError("Usage: load [save_num]")
+    else:
+        savefile = open(metadata.get_name(save_num), "rb", buffering=0)
+        savedata_full = base64.standard_b64decode(savefile.read())
+        metadata.header = savedata_full[:60]
+        savedata_text = savedata_full[60:].decode()[:-1]
+        savefile.close()
+        return parse_savedata(savedata_text)
+
+# saves the edited data to a savefile
+def savedata_write(savedata_map, metadata, args):
+    if (len(args) != 2):
+        raise InvalidArgsError("Usage: save [save_num]")
     if (args[1] not in ["0","1","2","3"]):
         confirm = input("save_num does not correspond to a valid savefile.\n \
         Save anyway? (y/n) ")
@@ -102,6 +118,7 @@ def savedata_write(savedata_map, metadata, save_num, args):
     savefile_write.close()
     return
 
+# replace this block with a separate function once more args are added, handle InvalidArgsError
 if len(sys.argv) == 1:
     save_num = None
 elif len(sys.argv) == 2:
@@ -136,35 +153,30 @@ if (save_num is None):
     sys.exit()
 
 metadata = SaveMetadata(None, savefile_path)
-
 try:
-    savefile = open(metadata.get_name(save_num), "r+b", buffering=0)
+    savedata_map = savedata_load(metadata, sys.argv)
+except InvalidArgsError:
+    print("Usage: python3 edit.py [save_num]")
 except:
     print("Error opening save", save_num)
-    sys.exit()
 
-
-# load save data
-savedata_full = base64.standard_b64decode(savefile.read())
-savedata_header = savedata_full[:60]
-metadata.header = savedata_header
-savedata_text = savedata_full[60:].decode()[:-1]
-savefile.close()
-
-# edit save data
-savedata_map = parse_savedata(savedata_text)
 while True:
     command_string = input(">>> ") 
     command = command_string.split(" ")
-    if (command[0] == "print"):
-        savedata_print(savedata_map, command)
-    elif (command[0] == "append"):
-        savedata_append(savedata_map, command)
-    elif (command[0] == "set"):
-        savedata_set(savedata_map, command)
-    elif (command[0] == "save"):
-        savedata_write(savedata_map, metadata, save_num, command)
-    elif (command[0] == "exit"):
-        sys.exit()
-    else:
-        print("Invalid command")
+    try:
+        if (command[0] == "print"):
+            savedata_print(savedata_map, command)
+        elif (command[0] == "append"):
+            savedata_append(savedata_map, command)
+        elif (command[0] == "set"):
+            savedata_set(savedata_map, command)
+        elif (command[0] == "save"):
+            savedata_write(savedata_map, metadata, save_num, command)
+        elif (command[0] == "exit"):
+            sys.exit()
+        elif (command[0] == "load"):
+            savedata_map = savedata_load(metadata, args)
+        else:
+            print("Invalid command")
+    except InvalidArgsError as err:
+        err.print()

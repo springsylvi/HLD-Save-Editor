@@ -1,7 +1,7 @@
 There are 3 types of data representations for values in the save file:
-    * A single decimal number, with exactly 6 digits after the decimal point, e.g. 47.000000
+    * A single decimal number written as a float, e.g. 47.000000
     * A string of concatenated flags, each followed by a + character, e.g. "1+2+21+"
-    * A string mapping a set of keys to lists of values. Value lists are a string of numbers, each followed by a & character. Keys are separated by a > character. e.g. "2=7&400&>0=121&"
+    * A string mapping a set of keys to lists of values. Each value is followed by a & character. Each key's list is followed by a > character. e.g. "2=7&400&>0=121&"
 
 For each field in the save file, the field name, data type (num, list or map) and meaning (if known) are noted below. gameName is the only field which is not one of these 3 types, since it is directly taken from user input.
 
@@ -55,6 +55,8 @@ checkStash (num): Number of healthkits the drifter is carrying.
 
 checkCID: Unknown meaning, appears to depend on checkRoom.
 
+badass (num): How many times the pink drifter has been talked to (maybe?). Valid values are 0-4.
+
 bosses (map): For each boss killed, lists the coordinates of their corpse.
 
 bossGearbits (list): Gearbits collected from dead bosses. See Boss Bit IDs (add this later).
@@ -97,7 +99,6 @@ successfulHealTimes (num): ?
 gearReminderTimes (num): ?
 successfulWarpTimes (num): ?
 noSpawn: ?
-badass (num): ?
 fireplaceSave (num): ?
 tutHeal (num): ?
 successfulCollectTimes (num): ?
@@ -150,10 +151,10 @@ Index Values:
         7: East Modules
         8: South Modules
         9: West Modules
-        10: ?
-        11: ?
-        12: ?
-        13: ?
+        10: Capes
+        11: Sprites
+        12: Swords
+        13: Skeletons (Keys/Outfits/Weapons)
         
     Bosses:
         0: Cleaner
@@ -167,9 +168,7 @@ Index Values:
     Rooms:
         see id_mappings.txt
 
-
 NOTES:
-
 
 on NG: tutheal=3,checkBat=100,halluc=0
 room with judgement cutscene: eq00=1,sc="1+",scK="1=1",checkBat=83.343333
