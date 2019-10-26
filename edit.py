@@ -1,7 +1,13 @@
 import sys, base64, os.path, json, configparser
 
-# where does the game store the file to load on 'continue'?
-# this may affect reverting to backups
+help_text = (
+    "load       load data from a save file\n"
+    "save       save data to a save file\n"
+    "set        assign a new value to a field\n"
+    "append     append a string onto a string-valued field\n"
+    "help       display this message\n"
+    "print      print the value of a field\n"
+    "exit       exit the program")
 
 class InvalidArgsError(Exception):
     def __init__(self, message):
@@ -102,8 +108,8 @@ def savedata_write(savedata_map, metadata, args):
     if (len(args) != 2):
         raise InvalidArgsError("Usage: save [save_num]")
     if (args[1] not in ["0","1","2","3"]):
-        confirm = input("save_num does not correspond to a valid savefile.\n \
-        Save anyway? (y/n) ")
+        confirm = input("save_num does not correspond to a valid savefile.\n"
+        "Save anyway? (y/n) ")
         if (confirm != "y"):
             return
 
@@ -124,8 +130,8 @@ if len(sys.argv) == 1:
 elif len(sys.argv) == 2:
     save_num = sys.argv[1]
     if (save_num not in ["0","1","2","3"]):
-        confirm = input("save_num does not correspond to a valid savefile. \
-        Read anyway? (y/n) ")
+        confirm = input("save_num does not correspond to a valid savefile.\n"
+        "Read anyway? (y/n) ")
         if (confirm != "y"):
             sys.exit()
 else:
@@ -143,22 +149,26 @@ except:
 config.read_file(config_ini)
 savefile_path = config.get("main", "path")
 if (save_num is None):
-    save_num = config.get("main", "save_num")
+    try:
+        save_num = config.get("main", "save_num")
+    except:
+        print("No save number specified")
+        sys.exit()
+
 
 if (savefile_path is None):
     print("No savefile path specified")
     sys.exit()    
-if (save_num is None):
-    print("No save number specified")
-    sys.exit()
 
 metadata = SaveMetadata(None, savefile_path)
 try:
     savedata_map = savedata_load(metadata, sys.argv)
 except InvalidArgsError:
     print("Usage: python3 edit.py [save_num]")
+    sys.exit()
 except:
     print("Error opening save", save_num)
+    sys.exit()
 
 while True:
     command_string = input(">>> ") 
@@ -176,6 +186,8 @@ while True:
             sys.exit()
         elif (command[0] == "load"):
             savedata_map = savedata_load(metadata, args)
+        elif (command[0] == "help"):
+            print(help_text)
         else:
             print("Invalid command")
     except InvalidArgsError as err:

@@ -168,12 +168,3 @@ Index Values:
     Rooms:
         see id_mappings.txt
 
-NOTES:
-
-on NG: tutheal=3,checkBat=100,halluc=0
-room with judgement cutscene: eq00=1,sc="1+",scK="1=1",checkBat=83.343333
-after cutscene: permaS="-1394233=2>",halluc=1,badassofficestate=0,tutheal=2
-
-16:00:30 = 43748.250330
-16:01:20 = 43749.250920
-
