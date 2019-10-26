@@ -1,7 +1,7 @@
 # HLD Save Editor
 A tool for editing save files for Hyper Light Drifter.
 ## Usage
-Compatible with any version of Python 3. Invoke with `python3 edit.py [save_num]` to open a save file. Typing `help` will list all available commands. The fields used in save files are described in `save_format.txt`.
+Compatible with any version of Python 3. Invoke with `python edit.py [save_num]` to open a save file (specify python3 on Mac). Typing `help` will list all available commands. The fields used in save files are described in `save_format.txt`.
 ## Config
 Configuration options are available through modifying `config.ini`. All options should be under the section `[main]`. The following options are available:
 

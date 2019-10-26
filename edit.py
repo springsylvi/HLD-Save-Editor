@@ -181,7 +181,7 @@ while True:
         elif (command[0] == "set"):
             savedata_set(savedata_map, command)
         elif (command[0] == "save"):
-            savedata_write(savedata_map, metadata, save_num, command)
+            savedata_write(savedata_map, metadata, command)
         elif (command[0] == "exit"):
             sys.exit()
         elif (command[0] == "load"):
