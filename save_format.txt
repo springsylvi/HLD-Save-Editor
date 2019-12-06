@@ -23,7 +23,7 @@ sc (list): Guns owned. See gun IDs.
 
 scUp (list): Guns upgraded.
 
-scK (map): Maps gun IDs to ?
+scK (map): Maps gun IDs to number of enemies killed with that gun?
 
 skill (list): Skills bought. See skill IDs.
 

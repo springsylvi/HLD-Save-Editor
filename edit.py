@@ -81,7 +81,10 @@ def savedata_append(savedata_map, args):
 # sets the value of a field
 def savedata_set(savedata_map, args):
     if (len(args) == 3):
-        savedata_map[args[1]] = Field(args[2])
+        if (args[1] == "empty"):
+            savedata_map[args[2]] = Field("")
+        else:
+            savedata_map[args[1]] = Field(args[2])
     elif (len(args) == 4 and args[1] == "num"):
         try:
             savedata_map[args[2]] = Field(float(args[3]))
@@ -95,13 +98,12 @@ def savedata_set(savedata_map, args):
 def savedata_load(metadata, args):
     if (len(args) != 2):
         raise InvalidArgsError("Usage: load [save_num]")
-    else:
-        savefile = open(metadata.get_name(save_num), "rb", buffering=0)
-        savedata_full = base64.standard_b64decode(savefile.read())
-        metadata.header = savedata_full[:60]
-        savedata_text = savedata_full[60:].decode()[:-1]
-        savefile.close()
-        return parse_savedata(savedata_text)
+    savefile = open(metadata.get_name(args[1]), "rb", buffering=0)
+    savedata_full = base64.standard_b64decode(savefile.read())
+    metadata.header = savedata_full[:60]
+    savedata_text = savedata_full[60:].decode()[:-1]
+    savefile.close()
+    return parse_savedata(savedata_text)
 
 # saves the edited data to a savefile
 def savedata_write(savedata_map, metadata, args):
@@ -125,16 +127,7 @@ def savedata_write(savedata_map, metadata, args):
     return
 
 # replace this block with a separate function once more args are added, handle InvalidArgsError
-if len(sys.argv) == 1:
-    save_num = None
-elif len(sys.argv) == 2:
-    save_num = sys.argv[1]
-    if (save_num not in ["0","1","2","3"]):
-        confirm = input("save_num does not correspond to a valid savefile.\n"
-        "Read anyway? (y/n) ")
-        if (confirm != "y"):
-            sys.exit()
-else:
+if len(sys.argv) != 2:
     print("Usage: python3 edit.py [save_num]")
     sys.exit()
 
@@ -148,14 +141,6 @@ except:
 
 config.read_file(config_ini)
 savefile_path = config.get("main", "path")
-if (save_num is None):
-    try:
-        save_num = config.get("main", "save_num")
-    except:
-        print("No save number specified")
-        sys.exit()
-
-
 if (savefile_path is None):
     print("No savefile path specified")
     sys.exit()    
@@ -167,7 +152,7 @@ except InvalidArgsError:
     print("Usage: python3 edit.py [save_num]")
     sys.exit()
 except:
-    print("Error opening save", save_num)
+    print("Error opening save", sys.argv[1])
     sys.exit()
 
 while True:
@@ -185,7 +170,7 @@ while True:
         elif (command[0] == "exit"):
             sys.exit()
         elif (command[0] == "load"):
-            savedata_map = savedata_load(metadata, args)
+            savedata_map = savedata_load(metadata, command)
         elif (command[0] == "help"):
             print(help_text)
         else:
