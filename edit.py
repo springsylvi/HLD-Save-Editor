@@ -1,8 +1,9 @@
-import sys, base64, os.path, json, configparser
+import sys, base64, os.path, json, re, configparser
 
 help_text = (
     "load       load data from a save file\n"
     "save       save data to a save file\n"
+    "files      list existing save files\n"
     "set        assign a new value to a field\n"
     "append     append a string onto a string-valued field\n"
     "help       display this message\n"
@@ -24,6 +25,13 @@ class SaveMetadata:
     def get_name(self, save_num):
         return os.path.join(self.path,
             "HyperLight_RecordOfTheDrifter_"+str(save_num)+".sav")
+
+    def get_save_num(self, name):
+        match = re.match("\A(HyperLight_RecordOfTheDrifter_)([^_].*)(\.sav)\Z", name, 0)
+        if match:
+            return match.group(2)
+        else:
+            return None
 
 class Field:
     def __init__(self, value):
@@ -51,10 +59,17 @@ def parse_savedata(savedata_text):
         savedata_map[name] = Field(value)
     return savedata_map
 
+# lists all savefiles in the directory
+def savedata_files(metadata, args):
+    for filename in os.listdir(metadata.path):
+        save_num = metadata.get_save_num(filename)
+        if save_num is not None:
+            print(save_num)
+
 # prints the value of a field
 def savedata_print(savedata_map, args):
     if (len(args) != 2):
-        raise InvalidArgsError("Usage: print [field_name]\n       print all") # test indentation
+        raise InvalidArgsError("Usage: print [field_name]\n       print all")
     if (args[1] == "all"):
         for name,field in savedata_map.items():
             print(name, ": ", field, sep="")
@@ -126,7 +141,6 @@ def savedata_write(savedata_map, metadata, args):
     savefile_write.close()
     return
 
-# replace this block with a separate function once more args are added, handle InvalidArgsError
 if len(sys.argv) != 2:
     print("Usage: python3 edit.py [save_num]")
     sys.exit()
@@ -173,6 +187,8 @@ while True:
             savedata_map = savedata_load(metadata, command)
         elif (command[0] == "help"):
             print(help_text)
+        elif (command[0] == "files"):
+            savedata_files(metadata, command)
         else:
             print("Invalid command")
     except InvalidArgsError as err:
