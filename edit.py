@@ -22,11 +22,20 @@ class SaveMetadata:
         self.header = header
         self.path = path
 
-    def get_name(self, save_num):
+    def set_save(self, save_num):
+        self.save_num = save_num
+        self.name = os.path.join(self.path,
+            "HyperLight_RecordOfTheDrifter_"+str(save_num)+".sav")
+
+    def get_name(self, save_num=None):
+        if (save_num is None):
+            return self.name
         return os.path.join(self.path,
             "HyperLight_RecordOfTheDrifter_"+str(save_num)+".sav")
 
-    def get_save_num(self, name):
+    def get_save_num(self, name=None):
+        if (name is None):
+            return self.save_num
         match = re.match("\A(HyperLight_RecordOfTheDrifter_)([^_].*)(\.sav)\Z", name, 0)
         if match:
             return match.group(2)
@@ -106,14 +115,19 @@ def savedata_set(savedata_map, args):
         except:
             print("Could not convert '{}' to a number".format(args[3]))
     else:
-        raise InvalidArgsError("Usage: set [field_name] [value]\n       set num [field_name] [value]") # test indentation
+        raise InvalidArgsError("Usage: set [field_name] [value]\n       set num [field_name] [value]")
     return
 
 # reads data from a savefile
 def savedata_load(metadata, args):
     if (len(args) != 2):
         raise InvalidArgsError("Usage: load [save_num]")
-    savefile = open(metadata.get_name(args[1]), "rb", buffering=0)
+    filename = metadata.get_name(args[1])
+    if (not os.path.exists(filename)):
+        raise InvalidArgsError("File does not exist")
+
+    metadata.set_save(args[1])
+    savefile = open(filename, "rb", buffering=0)
     savedata_full = base64.standard_b64decode(savefile.read())
     metadata.header = savedata_full[:60]
     savedata_text = savedata_full[60:].decode()[:-1]
@@ -170,7 +184,7 @@ except:
     sys.exit()
 
 while True:
-    command_string = input(">>> ") 
+    command_string = input("{}$ ".format(metadata.get_save_num())) 
     command = command_string.split(" ")
     try:
         if (command[0] == "print"):
