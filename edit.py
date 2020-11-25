@@ -1,4 +1,4 @@
-import sys, base64, os.path, json, re, configparser
+import sys, base64, os.path, json, re, configparser, platform, getpass
 
 help_all = (
     "load       load data from a save file\n"
@@ -53,7 +53,7 @@ class SaveMetadata:
     def __init__(self, header, path):
         self.header = header
         self.path = path
-        self.linux = (os.uname().sysname == "Linux")
+        self.linux = (platform.system() == "Linux")
 
     def set_save(self, save_num):
         self.save_num = save_num
@@ -231,6 +231,23 @@ def display_help(args):
         raise InvalidArgsError("Invalid help topic")
     return
 
+# get the default savefile path for the user's OS
+def autofill_path(config):
+    sysname = platform.system()
+    username = getpass.getuser()
+    if (sysname == "Windows"):
+        path = "C:\\Users\\{}\\AppData\\Local\\HyperLightDrifter".format(username)
+    elif (sysname == "Darwin"):
+        path = "/Users/{}/Library/Application Support/com.HeartMachine.HyperLightDrifter".format(username)
+    elif (sysname == "Linux"):
+        path = "/home/{}/.config/HyperLightDrifter".format(username)
+    else:
+        raise Exception("Unknown OS")
+
+    if os.path.exists(path):
+        return path
+    raise Exception("Default path does not exist")
+
 if len(sys.argv) != 2:
     print("Usage: python3 edit.py [save_num]")
     sys.exit()
@@ -244,10 +261,23 @@ except:
     sys.exit()
 
 config.read_file(config_ini)
-savefile_path = config.get("main", "path")
+config_ini.close()
+savefile_path = config.get("main", "path", fallback=None)
 if (savefile_path is None):
-    print("No savefile path specified")
-    sys.exit()    
+    confirm = input("No savefile path specified. Attempt to auto-fill? (y/n) ")
+    if (confirm != "y"):
+        sys.exit()
+    try:
+        savefile_path = autofill_path(config)
+        if not "main" in config:
+            config.add_section("main")
+        config["main"]["path"] = savefile_path
+        with open("config.ini", "w+") as config_ini:
+            config.write(config_ini)
+        print("Set path to", savefile_path)
+    except Exception as err:
+        print("Failed to auto-fill path:", err)
+        sys.exit()
 
 metadata = SaveMetadata(None, savefile_path)
 try:
