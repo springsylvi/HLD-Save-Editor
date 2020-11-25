@@ -93,13 +93,13 @@ hasMap (num): Whether the map has been picked up. Valid values are 0-1.
 
 gear (num): Unspent Gearbits. Valid values are 0-185.
 
+fireplaceSave (num): Whether the game has been beaten.
 
 gunReminderTimes (num): ?
 successfulHealTimes (num): ?
 gearReminderTimes (num): ?
 successfulWarpTimes (num): ?
 noSpawn: ?
-fireplaceSave (num): ?
 tutHeal (num): ?
 successfulCollectTimes (num): ?
 newcomerHoardeMessageShown (num): ?

@@ -1,14 +1,46 @@
 import sys, base64, os.path, json, re, configparser
 
-help_text = (
+help_all = (
     "load       load data from a save file\n"
     "save       save data to a save file\n"
     "files      list existing save files\n"
     "set        assign a new value to a field\n"
     "append     append a string onto a string-valued field\n"
-    "help       display this message\n"
+    "help       display help for a command\n"
     "print      print the value of a field\n"
+    "transfer   transfer save data from one computer to another\n"
     "exit       exit the program")
+
+# placeholder help text, replace these
+help_text = {
+    "all": help_all,
+    "load": (
+        "Usage: load [save_num]\n\n"
+        "Load data from a save file. Equivalent to starting the program with parameter save_num."),
+    "save": (
+        "Usage: save [save_num]\n\n"
+        "Save the current values to a save file."),
+    "files": (
+        "Usage: files\n\n"
+        "List the save_num of each available save file."),
+    "set": (
+        "Usage: set [field_name] [value]\n       set num [field_name] [value]\n\n"
+        "Set field_name to value. In the first form, value is treated as a string. In the second, it is treated as a number."),
+    "append": (
+        "Usage: append [field_name] [string]\n\n"
+        "Append a string onto the end of field_name's current value. Fails if the value is not a string."),
+    "help": (
+        "Usage: help\n       help [command]\n\n"
+        "Display help for a command, or general help for all commands if none is specified."),
+    "print": (
+        "Usage: print [field_name]\n       print all\n\n"
+        "In the first form, print the value of field_name. In the second, print every name/value pair."),
+    "transfer": (
+        "Usage: transfer [src_save_num] [dst_save_num]\n\n"
+        "Saves the current values to dst_save_num, but with the machine-specific header from src_save_num."),
+    "exit": (
+        "Usage: exit\n\n"
+        "Exit the program.")}
 
 class InvalidArgsError(Exception):
     def __init__(self, message):
@@ -21,22 +53,36 @@ class SaveMetadata:
     def __init__(self, header, path):
         self.header = header
         self.path = path
+        self.linux = (os.uname().sysname == "Linux")
 
     def set_save(self, save_num):
         self.save_num = save_num
-        self.name = os.path.join(self.path,
+        if self.linux:
+            self.name = os.path.join(self.path,
+            "hyperlight_recordofthedrifter_"+str(save_num)+".sav")
+        else:
+            self.name = os.path.join(self.path,
             "HyperLight_RecordOfTheDrifter_"+str(save_num)+".sav")
-
+            
     def get_name(self, save_num=None):
         if (save_num is None):
             return self.name
-        return os.path.join(self.path,
-            "HyperLight_RecordOfTheDrifter_"+str(save_num)+".sav")
+        if self.linux:
+            return os.path.join(self.path,
+                "hyperlight_recordofthedrifter_"+str(save_num)+".sav")
+        else:
+            return os.path.join(self.path,
+                "HyperLight_RecordOfTheDrifter_"+str(save_num)+".sav")
 
     def get_save_num(self, name=None):
         if (name is None):
             return self.save_num
-        match = re.match("\A(HyperLight_RecordOfTheDrifter_)([^_].*)(\.sav)\Z", name, 0)
+
+        if self.linux:
+            match = re.match("\A(hyperlight_recordofthedrifter_)([^_].*)(\.sav)\Z", name, 0)
+        else:
+            match = re.match("\A(HyperLight_RecordOfTheDrifter_)([^_].*)(\.sav)\Z", name, 0)
+
         if match:
             return match.group(2)
         else:
@@ -124,7 +170,7 @@ def savedata_load(metadata, args):
         raise InvalidArgsError("Usage: load [save_num]")
     filename = metadata.get_name(args[1])
     if (not os.path.exists(filename)):
-        raise InvalidArgsError("File does not exist")
+        raise Exception("File does not exist")
 
     metadata.set_save(args[1])
     savefile = open(filename, "rb", buffering=0)
@@ -153,6 +199,36 @@ def savedata_write(savedata_map, metadata, args):
     savefile_write = open(metadata.get_name(args[1]), "wb", buffering=0)
     savefile_write.write(base64.standard_b64encode(savedata_full))
     savefile_write.close()
+    return
+
+# changes the header to match another savefile
+def savedata_transfer(savedata_map, metadata, args):
+    if (len(args) != 3):
+        raise InvalidArgsError("Usage: transfer [src_save_num] [dst_save_num]")
+    src_filename = metadata.get_name(args[1])
+    dst_filename = metadata.get_name(args[2])
+    if (not os.path.exists(src_filename)):
+        raise InvalidArgsError("Source file does not exist")
+
+    src_savefile = open(src_filename, "rb", buffering=0)
+    src_header = base64.standard_b64decode(src_savefile.read())[:60]
+    src_metadata = SaveMetadata(src_header, metadata.path)
+    savedata_write(savedata_map, src_metadata, ["save", args[2]])
+    return
+
+# diplay help for a command, or generic help if none is specified
+def display_help(args):
+    if (len(args) == 1):
+        help_id = "all"
+    elif (len(args) == 2):
+        help_id = args[1]
+    else:
+        raise InvalidArgsError("Usage: help\n       help [command]")
+
+    if (help_id in help_text):
+        print(help_text[help_id])
+    else:
+        raise InvalidArgsError("Invalid help topic")
     return
 
 if len(sys.argv) != 2:
@@ -200,9 +276,11 @@ while True:
         elif (command[0] == "load"):
             savedata_map = savedata_load(metadata, command)
         elif (command[0] == "help"):
-            print(help_text)
+            display_help(command)
         elif (command[0] == "files"):
             savedata_files(metadata, command)
+        elif (command[0] == "transfer"):
+            savedata_transfer(savedata_map, metadata, command)
         else:
             print("Invalid command")
     except InvalidArgsError as err:
