@@ -256,6 +256,8 @@ if len(sys.argv) != 2:
 config = configparser.ConfigParser()
 try:
     config_ini = open("config.ini", "r")
+except FileNotFoundError:
+    config_ini = open("config.ini", "x+")
 except:
     print("No config file found")
     sys.exit()
