@@ -23,7 +23,7 @@ sc (list): Guns owned. See gun IDs.
 
 scUp (list): Guns upgraded.
 
-scK (map): Maps gun IDs to number of enemies killed with that gun?
+scK (map): Maps gun IDs to number of enemies killed with that gun
 
 skill (list): Skills bought. See skill IDs.
 
@@ -33,13 +33,13 @@ healthUp (num): Medkit slots bought. Valid values are 0-2.
 
 values (map): Contains several miscellaneous values.
     ValuebadassOfficeState (num): ? usually 0/2/3 ?
-    ValueaptLight (num): ?
+    ValueaptLight (num): Whether the light in the drifter's house is on. Value is treated as boolean.
     ValuedashHS (num): Chaindash Challenge Highscore
     ValueSoccerWins, ValueSoccerLosses (num): Wins and Losses against soccer kid.
 
 halluc (num): Number of judgement cutscenes watched?
 
-eq00, eq01 (num): IDs of currently equipped guns.
+eq00, eq01 (num): IDs of currently equipped guns. Ignored if the corresponding gun is not owned.
 
 checkRoom (num): The room the drifter is currently in. Each map has a corresponding integer in a table. (Add this table later)
 
@@ -91,7 +91,7 @@ charDeaths (num): How many times the drifter has died on this file.
 
 hasMap (num): Whether the map has been picked up. Valid values are 0-1.
 
-gear (num): Unspent Gearbits. Valid values are 0-185.
+gear (num): Unspent Gearbits. All uint values are valid, but only 0-185 are possible through normal gameplay.
 
 fireplaceSave (num): Whether the game has been beaten.
 
@@ -105,7 +105,7 @@ successfulCollectTimes (num): ?
 newcomerHoardeMessageShown (num): ?
 permaS (list): ?
 
-Index Values:
+Enum Values:
     Areas:
         0: East
         1: North
@@ -166,5 +166,5 @@ Index Values:
         3.40: CountAlucard
 
     Rooms:
-        see id_mappings.txt
+        see room_id.txt
 
