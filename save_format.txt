@@ -55,7 +55,7 @@ checkStash (num): Number of healthkits the drifter is carrying.
 
 checkCID: Unknown meaning, appears to depend on checkRoom.
 
-badass (num): How many times the pink drifter has been talked to (maybe?). Valid values are 0-4.
+badass (num): How many times the pink drifter has been talked to. Valid values are 0-4.
 
 bosses (map): For each boss killed, lists the coordinates of their corpse.
 

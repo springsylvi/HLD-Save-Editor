@@ -24,8 +24,8 @@ help_text = {
         "Usage: files\n\n"
         "List the save_num of each available save file."),
     "set": (
-        "Usage: set [field_name] [value]\n       set num [field_name] [value]\n\n"
-        "Set field_name to value. In the first form, value is treated as a string. In the second, it is treated as a number."),
+        "Usage: set [field_name] [value]\n       set num [field_name] [value]\n       set empty [field_name]\n"
+        "Set field_name to value. In the first form, value is treated as a string. In the second, it is treated as a number. In the third, value is set to the empty string."),
     "append": (
         "Usage: append [field_name] [string]\n\n"
         "Append a string onto the end of field_name's current value. Fails if the value is not a string."),
@@ -43,11 +43,10 @@ help_text = {
         "Exit the program.")}
 
 class InvalidArgsError(Exception):
-    def __init__(self, message):
-        self.message = message
-
-    def print(self):
-        print(self.message)
+    pass
+        
+class FileError(Exception):
+    pass
 
 class SaveMetadata:
     def __init__(self, header, path):
@@ -170,7 +169,7 @@ def savedata_load(metadata, args):
         raise InvalidArgsError("Usage: load [save_num]")
     filename = metadata.get_name(args[1])
     if (not os.path.exists(filename)):
-        raise Exception("File does not exist")
+        raise FileError("File does not exist")
 
     metadata.set_save(args[1])
     savefile = open(filename, "rb", buffering=0)
@@ -197,7 +196,10 @@ def savedata_write(savedata_map, metadata, args):
 
     savedata_full = metadata.header + savedata_text.encode()
     savefile_write = open(metadata.get_name(args[1]), "wb", buffering=0)
-    savefile_write.write(base64.standard_b64encode(savedata_full))
+    try:
+        savefile_write.write(base64.standard_b64encode(savedata_full))
+    except:
+        raise FileError("File cannot be written")
     savefile_write.close()
     return
 
@@ -316,4 +318,6 @@ while True:
         else:
             print("Invalid command")
     except InvalidArgsError as err:
-        err.print()
+        print(err)
+    except FileError as err:
+        print(err)
