@@ -183,11 +183,6 @@ def savedata_load(metadata, args):
 def savedata_write(savedata_map, metadata, args):
     if (len(args) != 2):
         raise InvalidArgsError("Usage: save [save_num]")
-    if (args[1] not in ["0","1","2","3"]):
-        confirm = input("save_num does not correspond to a valid savefile.\n"
-        "Save anyway? (y/n) ")
-        if (confirm != "y"):
-            return
 
     savedata_map_raw = {}
     for name, field in savedata_map.items():
