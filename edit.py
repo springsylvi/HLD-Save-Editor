@@ -17,8 +17,8 @@ help_text = {
         "Usage: load [save_num]\n\n"
         "Load data from a save file. Equivalent to starting the program with parameter save_num."),
     "save": (
-        "Usage: save [save_num]\n\n"
-        "Save the current values to a save file."),
+        "Usage: save [save_num]\n      \n\n"
+        "Save the current values to a save file. If save_num is omitted, saves the file to itself."),
     "files": (
         "Usage: files\n\n"
         "List the save_num of each available save file."),
@@ -183,16 +183,19 @@ def savedata_load(metadata, args):
 
 # saves the edited data to a savefile
 def savedata_write(savedata_map, metadata, args):
-    if (len(args) != 2):
-        raise InvalidArgsError("Usage: save [save_num]")
-
+    if (len(args) == 1):
+        dst_save_num = metadata.get_save_num()
+    elif (len(args) == 2):
+        dst_save_num = args[1]
+    else:
+        raise InvalidArgsError("Usage: save [save_num]\n       save")
     savedata_map_raw = {}
     for name, field in savedata_map.items():
         savedata_map_raw[name] = field.value
     savedata_text = json.dumps(savedata_map_raw) + " "
 
     savedata_full = metadata.header + savedata_text.encode()
-    savefile_write = open(metadata.get_name(args[1]), "wb", buffering=0)
+    savefile_write = open(metadata.get_name(dst_save_num), "wb", buffering=0)
     try:
         savefile_write.write(base64.standard_b64encode(savedata_full))
     except:
@@ -204,6 +207,7 @@ def savedata_write(savedata_map, metadata, args):
 def savedata_transfer(savedata_map, metadata, args):
     if (len(args) != 3):
         raise InvalidArgsError("Usage: transfer [src_save_num] [dst_save_num]\n       transfer all [src_save_num]")
+
     if (args[1] == "all"):
         src_filename = metadata.get_name(args[2])
         files = []
