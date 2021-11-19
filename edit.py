@@ -11,7 +11,6 @@ help_all = (
     "transfer   transfer save data from one computer to another\n"
     "exit       exit the program")
 
-# placeholder help text, replace these
 help_text = {
     "all": help_all,
     "load": (
@@ -36,8 +35,8 @@ help_text = {
         "Usage: print [field_name]\n       print all\n\n"
         "In the first form, print the value of field_name. In the second, print every name/value pair."),
     "transfer": (
-        "Usage: transfer [src_save_num] [dst_save_num]\n\n"
-        "Saves the current values to dst_save_num, but with the machine-specific header from src_save_num."),
+        "Usage: transfer [src_save_num] [dst_save_num]\n       transfer all [src_save_num]\n\n"
+        "Saves the current values to dst_save_num, but with the machine-specific header from src_save_num. In the second form, applies the header from src_save_num to all files."),
     "exit": (
         "Usage: exit\n\n"
         "Exit the program.")}
@@ -48,6 +47,9 @@ class InvalidArgsError(Exception):
 class FileError(Exception):
     pass
 
+# todo: rework this class as a virtual savefile object, no static methods
+# and include savedata in the object. add a reload() method to reload data
+# from the file
 class SaveMetadata:
     def __init__(self, header, path):
         self.header = header
@@ -201,17 +203,44 @@ def savedata_write(savedata_map, metadata, args):
 # changes the header to match another savefile
 def savedata_transfer(savedata_map, metadata, args):
     if (len(args) != 3):
-        raise InvalidArgsError("Usage: transfer [src_save_num] [dst_save_num]")
-    src_filename = metadata.get_name(args[1])
-    dst_filename = metadata.get_name(args[2])
+        raise InvalidArgsError("Usage: transfer [src_save_num] [dst_save_num]\n       transfer all [src_save_num]")
+    if (args[1] == "all"):
+        src_filename = metadata.get_name(args[2])
+        files = []
+        for filename in os.listdir(metadata.path):
+            save_num = metadata.get_save_num(filename)
+            if (save_num is not None and save_num != args[2]):
+                files.append(save_num)
+    else:
+        src_filename = metadata.get_name(args[1])
+        files = [metadata.get_name(args[2])]
     if (not os.path.exists(src_filename)):
         raise InvalidArgsError("Source file does not exist")
 
-    src_savefile = open(src_filename, "rb", buffering=0)
-    src_header = base64.standard_b64decode(src_savefile.read())[:60]
-    src_metadata = SaveMetadata(src_header, metadata.path)
-    savedata_write(savedata_map, src_metadata, ["save", args[2]])
+    for dst_filename in files:
+        src_savefile = open(src_filename, "rb", buffering=0)
+        src_header = base64.standard_b64decode(src_savefile.read())[:60]
+        src_metadata = SaveMetadata(src_header, metadata.path)
+        savedata_write(savedata_map, src_metadata, ["save", dst_filename])
+        src_savefile.close()
     return
+
+# sets the drifter's coordinates to an entrance
+def set_entrance(savedata_map, metadata, args):
+    if (len(args) == 1):
+        entrance = 0
+    elif (len(args) == 2):
+        try:
+            entrance = int(args[1])
+        except:
+            raise InvalidArgsError("Usage: entrance\n       entrance [entrance_num]")
+    else:
+        raise InvalidArgsError("Usage: entrance\n       entrance [entrance_num]")
+
+    entrances = open("entrances.csv")
+    # read line number corresponding to checkRoom
+    # get nth entry on that line for the nth entrance coords
+
 
 # diplay help for a command, or generic help if none is specified
 def display_help(args):
