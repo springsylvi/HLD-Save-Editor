@@ -221,12 +221,17 @@ def savedata_transfer(savedata_map, metadata, args):
     if (not os.path.exists(src_filename)):
         raise InvalidArgsError("Source file does not exist")
 
+    current_file = metadata.get_save_num()
+    src_savefile = open(src_filename, "rb", buffering=0)
+    src_header = base64.standard_b64decode(src_savefile.read())[:60]
+    src_metadata = SaveMetadata(src_header, metadata.path)
+
     for dst_filename in files:
-        src_savefile = open(src_filename, "rb", buffering=0)
-        src_header = base64.standard_b64decode(src_savefile.read())[:60]
-        src_metadata = SaveMetadata(src_header, metadata.path)
-        savedata_write(savedata_map, src_metadata, ["save", dst_filename])
-        src_savefile.close()
+        dst_map = savedata_load(metadata, ["load", dst_filename])
+        savedata_write(dst_map, src_metadata, ["save", dst_filename])
+
+    src_savefile.close()
+    savedata_load(metadata, ["load", current_file])
     return
 
 # sets the drifter's coordinates to an entrance
